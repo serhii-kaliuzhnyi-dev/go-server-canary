@@ -18,7 +18,7 @@ var events = []Event{
 		ID: 1,
 		Name: "test",
 		Description: "test description",
-		Location: "test location",
+		Location: "test location2",
 		DateTime: time.Now(),
 		UserId: 1,
 	},
