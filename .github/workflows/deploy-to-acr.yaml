@@ -20,7 +20,7 @@ jobs:
 
       - name: Azure Container Registry Login
         run: |
-          echo $ACR_PASSWORD | docker login $ACR_LOGIN_SERVER -u $ACR_USERNAME --password-stdin
+          az acr login --name trnimagestorage
 
       - name: Build and push Docker image
         env:
