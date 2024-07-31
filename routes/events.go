@@ -11,7 +11,7 @@ func GetEvents(context *gin.Context) {
 	events, err := models.GetAllEvents()
 
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"message": "Something really bad happened"})
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Something bad happened"})
 	}
 
 	context.JSON(http.StatusOK, events)
