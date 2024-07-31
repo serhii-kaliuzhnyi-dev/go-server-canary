@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Deploy to ACR
 
 on:
   pull_request:
@@ -19,6 +19,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Use the token or SSH key as required
+          # token: ${{ secrets.GITHUB_TOKEN }}
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - name: Azure login
         uses: azure/login@v2
@@ -38,19 +42,26 @@ jobs:
       - name: Update deployment manifest
         run: |
           if [ "${{ env.isProd }}" == "true" ]; then
-            DEPLOYMENT_FILE="infra/manifests/deployment-main.yaml"
+            DEPLOYMENT_FILE="infra/manifests/deployment.yaml"
           elif [ "${{ env.isCanary }}" == "true" ]; then
             DEPLOYMENT_FILE="infra/manifests/deployment-canary.yaml"
           fi
           sed -i "s|trnimagestorage.azurecr.io/my-go-app:.*|trnimagestorage.azurecr.io/my-go-app:$IMAGE_TAG|g" $DEPLOYMENT_FILE
 
+      - name: Get Commit Info from Source Repo
+        run: |
+          echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+
       - name: Commit and push updated deployment manifest
         run: |
           git config --global user.email "kalyuzhni.sergei@gmail.com"
           git config --global user.name "Serhii"
-          git add .
-          git commit -m "Update deployment manifest with new image tag $IMAGE_TAG"
-          git push
+          git add $DEPLOYMENT_FILE
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git commit -m "$COMMIT_MESSAGE"
+            git push origin HEAD:${GITHUB_REF_NAME}
 
       - name: Create a new tag
         if: env.isProd == 'true'
