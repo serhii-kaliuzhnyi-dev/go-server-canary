@@ -12,7 +12,7 @@ jobs:
 
     env:
       ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
-      IMAGE_TAG: ${{ github.ref_name }}
+      IMAGE_TAG: ${{ github.ref_name }} # Extracted directly
       isProd: ${{ github.event.pull_request.base.ref == 'main' }}
       isCanary: ${{ github.event.pull_request.base.ref == 'canary' }}
 
@@ -20,8 +20,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # token: ${{ secrets.GITHUB_TOKEN }}
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - name: Azure login
         uses: azure/login@v2
@@ -56,11 +56,8 @@ jobs:
           git config --global user.email "kalyuzhni.sergei@gmail.com"
           git config --global user.name "Serhii"
           git add .
-          if git diff-index --quiet HEAD --; then
-            echo "No changes to commit"
-          else
-            git commit -m "$COMMIT_MESSAGE"
-            git push origin HEAD:${GITHUB_REF_NAME}
+          git commit -m "$COMMIT_MESSAGE"
+          git push origin HEAD:${GITHUB_REF_NAME}
 
       - name: Create a new tag
         if: env.isProd == 'true'
