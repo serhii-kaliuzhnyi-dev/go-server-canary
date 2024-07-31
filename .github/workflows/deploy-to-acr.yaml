@@ -46,9 +46,9 @@ jobs:
 
       - name: Commit and push updated deployment manifest
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-          git add $DEPLOYMENT_FILE
+          git config --global user.email "kalyuzhni.sergei@gmail.com"
+          git config --global user.name "Serhii"
+          git add .
           git commit -m "Update deployment manifest with new image tag $IMAGE_TAG"
           git push
 
