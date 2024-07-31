@@ -1,4 +1,4 @@
-name: Deploy to ACR
+name: Build and Deploy
 
 on:
   pull_request:
@@ -7,8 +7,14 @@ on:
 
 jobs:
   build-and-deploy:
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    if: github.event.pull_request.merged == true && (github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == 'canary')
     runs-on: ubuntu-latest
+
+    env:
+      ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+      IMAGE_TAG: ${{ github.ref_name }}
+      isProd: ${{ github.event.pull_request.base.ref == 'main' }}
+      isCanary: ${{ github.event.pull_request.base.ref == 'canary' }}
 
     steps:
       - name: Checkout code
@@ -24,9 +30,30 @@ jobs:
           az acr login --name trnimagestorage
 
       - name: Build and push Docker image
-        env:
-          ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
         run: |
-          IMAGE_TAG=latest
+          IMAGE_TAG=$(echo ${{ env.IMAGE_TAG }} | sed 's/^release\///')
           docker build -t $ACR_LOGIN_SERVER/my-go-app:$IMAGE_TAG .
           docker push $ACR_LOGIN_SERVER/my-go-app:$IMAGE_TAG
+
+      - name: Update deployment manifest
+        run: |
+          if [ "${{ env.isProd }}" == "true" ]; then
+            DEPLOYMENT_FILE="infra/manifests/deployment-main.yaml"
+          elif [ "${{ env.isCanary }}" == "true" ]; then
+            DEPLOYMENT_FILE="infra/manifests/deployment-canary.yaml"
+          fi
+          sed -i "s|trnimagestorage.azurecr.io/my-go-app:.*|trnimagestorage.azurecr.io/my-go-app:$IMAGE_TAG|g" $DEPLOYMENT_FILE
+
+      - name: Commit and push updated deployment manifest
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git add $DEPLOYMENT_FILE
+          git commit -m "Update deployment manifest with new image tag $IMAGE_TAG"
+          git push
+
+      - name: Create a new tag
+        if: env.isProd == 'true'
+        run: |
+          git tag $IMAGE_TAG
+          git push origin $IMAGE_TAG
