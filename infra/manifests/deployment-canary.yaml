@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: my-go-app
-        image: trnimagestorage.azurecr.io/my-go-app:latest
+        image: trnimagestorage.azurecr.io/my-go-app:canary
         ports:
         - containerPort: 8080
 ---
