@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-go-app-canary
+  namespace: application
   labels:
     app: my-go-app
-    namespace: application
     environment: canary
 spec:
   replicas: 1
