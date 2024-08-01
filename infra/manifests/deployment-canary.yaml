@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-go-app-canary
+  namespace: application
+  labels:
+    app: my-go-app
+    environment: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-go-app
+      environment: canary
+  template:
+    metadata:
+      labels:
+        app: my-go-app
+        environment: canary
+    spec:
+      imagePullSecrets:
+        - name: acr-secret
+      containers:
+      - name: my-go-app
+        image: trnimagestorage.azurecr.io/my-go-app:v0.1.0
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-go-app-canary
+  namespace: application
+spec:
+  selector:
+    app: my-go-app
+    environment: canary
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
