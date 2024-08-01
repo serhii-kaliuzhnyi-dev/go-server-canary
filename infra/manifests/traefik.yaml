@@ -9,6 +9,7 @@ rules:
     resources:
       - services
       - secrets
+      - nodes
     verbs:
       - get
       - list
@@ -77,10 +78,11 @@ spec:
       serviceAccountName: traefik-account
       containers:
         - name: traefik
-          image: traefik:v3.1
+          image: traefik:v2.4
           args:
-            - --api.insecure
-            - --providers.kubernetesingress
+            - --api.insecure=true
+            - --providers.kubernetescrd
+            - --entrypoints.web.address=:80
           ports:
             - name: web
               containerPort: 80
@@ -128,19 +130,17 @@ spec:
         port: 8080
         weight: 10
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
 metadata:
-  name: my-go-app-ingress
+  name: my-go-app-ingress-route
   namespace: application
 spec:
-  rules:
-    - http:
-        paths:
-          - path: /events
-            pathType: Prefix
-            backend:
-              service:
-                name: my-go-app-weight
-                port:
-                  number: 8080
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: my-go-app-weight
+          kind: TraefikService
