@@ -6,7 +6,7 @@ metadata:
   labels:
     app: my-go-app
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: my-go-app
@@ -15,6 +15,8 @@ spec:
       labels:
         app: my-go-app
     spec:
+      imagePullSecrets:
+        - name: acr-secret
       containers:
       - name: my-go-app
         image: trnimagestorage.azurecr.io/my-go-app:latest
