@@ -1,0 +1,63 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: traefik
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://traefik.github.io/charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  chart:
+    spec:
+      chart: traefik
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: flux-system
+      version: "30.0.0"
+  interval: 5m
+  values:
+    service:
+      type: LoadBalancer
+    ports:
+      web:
+        expose: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: my-go-app-ingress-route
+  namespace: application
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/events`)
+      kind: Rule
+      middlewares:
+        - name: my-go-app-weight
+      services:
+        - name: my-go-app
+          port: 8080
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: my-go-app-weight
+  namespace: application
+spec:
+  weighted:
+    services:
+      - name: my-go-app
+        port: 8080
+        weight: 10
+      - name: my-go-app-canary
+        port: 8080
+        weight: 90
