@@ -1,34 +1,128 @@
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta1
-kind: HelmRepository
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: traefik
-  namespace: flux-system
-spec:
-  interval: 1m
-  url: https://traefik.github.io/charts
+  name: traefik-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
+apiVersion: v1
+kind: ServiceAccount
 metadata:
-  name: traefik
-  namespace: traefik
+  name: traefik-account
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: traefik-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-role
+subjects:
+  - kind: ServiceAccount
+    name: traefik-account
+    namespace: default
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: traefik-deployment
+  labels:
+    app: traefik
 spec:
-  chart:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
     spec:
-      chart: traefik
-      sourceRef:
-        kind: HelmRepository
-        name: traefik
-        namespace: flux-system
-      version: "30.0.0"
-  interval: 5m
-  values:
-    service:
-      type: LoadBalancer
-    ports:
-      web:
-        expose: true
+      serviceAccountName: traefik-account
+      containers:
+        - name: traefik
+          image: traefik:v3.1
+          args:
+            - --api.insecure
+            - --providers.kubernetesingress
+          ports:
+            - name: web
+              containerPort: 80
+            - name: dashboard
+              containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-dashboard-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: dashboard
+  selector:
+    app: traefik
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-web-service
+spec:
+  type: LoadBalancer
+  ports:
+    - targetPort: web
+      port: 80
+  selector:
+    app: traefik
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: my-go-app-weight
+  namespace: application
+spec:
+  weighted:
+    services:
+      - name: my-go-app
+        port: 8080
+        weight: 90
+      - name: my-go-app-canary
+        port: 8080
+        weight: 10
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -46,18 +140,3 @@ spec:
       services:
         - name: my-go-app
           port: 8080
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: my-go-app-weight
-  namespace: application
-spec:
-  weighted:
-    services:
-      - name: my-go-app
-        port: 8080
-        weight: 10
-      - name: my-go-app-canary
-        port: 8080
-        weight: 90
