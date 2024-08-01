@@ -113,8 +113,8 @@ spec:
   selector:
     app: traefik
 ---
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
+apiVersion: traefik.io/v1alpha1
+kind: TraefikService
 metadata:
   name: my-go-app-weight
   namespace: application
