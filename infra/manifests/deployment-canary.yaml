@@ -18,9 +18,11 @@ spec:
         app: my-go-app
         environment: canary
     spec:
+      imagePullSecrets:
+        - name: acr-secret
       containers:
       - name: my-go-app
-        image: trnimagestorage.azurecr.io/my-go-app:latest
+        image: trnimagestorage.azurecr.io/my-go-app:v0.1.0
         ports:
         - containerPort: 8080
 ---
