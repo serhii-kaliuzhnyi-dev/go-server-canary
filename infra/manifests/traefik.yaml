@@ -10,6 +10,7 @@ rules:
       - services
       - secrets
       - nodes
+      - endpoints
     verbs:
       - get
       - list
@@ -38,6 +39,21 @@ rules:
       - ingresses/status
     verbs:
       - update
+  - apiGroups:
+      - traefik.io
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - traefikservices
+      - tlsoptions
+      - tlsstores
+      - middlewares
+      - serverstransports
+    verbs:
+      - get
+      - list
+      - watch
 ---
 apiVersion: v1
 kind: ServiceAccount
