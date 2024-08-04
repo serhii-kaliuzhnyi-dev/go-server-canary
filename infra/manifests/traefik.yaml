@@ -187,4 +187,5 @@ spec:
         backend:
           service:
             name: my-go-app-canary
-            port: 80
+            port:
+              name: web
