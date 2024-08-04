@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-go-app
-  namespace: application
+  namespace: default
   labels:
     app: my-go-app
 spec:
@@ -27,7 +27,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: my-go-app
-  namespace: application
+  namespace: default
 spec:
   selector:
     app: my-go-app

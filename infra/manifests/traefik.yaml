@@ -178,6 +178,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: go-app-ingress
+  namespace: application
 spec:
   rules:
   - http:
@@ -188,4 +189,4 @@ spec:
           service:
             name: my-go-app-canary
             port:
-              name: web
+              number: 80
