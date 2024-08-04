@@ -189,4 +189,4 @@ spec:
           service:
             name: my-go-app-canary
             port:
-              number: 80
+              name: web
