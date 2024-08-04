@@ -153,10 +153,10 @@ spec:
   weighted:
     services:
       - name: my-go-app
-        port: 8080
+        port: 80
         weight: 90
       - name: my-go-app-canary
-        port: 8080
+        port: 80
         weight: 10
 ---
 apiVersion: traefik.io/v1alpha1
@@ -188,4 +188,4 @@ spec:
           service:
             name: my-go-app-canary
             port:
-              name: 8080
+              name: 80
