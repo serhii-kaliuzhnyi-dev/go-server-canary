@@ -173,3 +173,19 @@ spec:
       services:
         - name: my-go-app-weight
           kind: TraefikService
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: go-app-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: my-go-app-canary
+            port:
+              name: 8080
