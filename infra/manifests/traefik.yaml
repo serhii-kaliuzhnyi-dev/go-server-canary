@@ -93,7 +93,6 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: traefik-deployment
-  namespace: default
   labels:
     app: traefik
 spec:
@@ -127,11 +126,10 @@ metadata:
   name: traefik-dashboard-service
   namespace: default
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
     - port: 8080
       targetPort: dashboard
-      nodePort: 32000  # Ensure this port is open and available
   selector:
     app: traefik
 ---
@@ -141,11 +139,10 @@ metadata:
   name: traefik-web-service
   namespace: default
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
     - targetPort: web
       port: 80
-      nodePort: 30080  # Ensure this port is open and available
   selector:
     app: traefik
 ---
@@ -178,20 +175,3 @@ spec:
       services:
         - name: my-go-app-weight
           kind: TraefikService
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: go-app-ingress
-  namespace: default
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: my-go-app-canary
-            port:
-              name: web
