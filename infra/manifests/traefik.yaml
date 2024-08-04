@@ -42,14 +42,16 @@ rules:
   - apiGroups:
       - traefik.io
     resources:
+      - middlewares
+      - middlewaretcps
       - ingressroutes
+      - traefikservices
       - ingressroutetcps
       - ingressrouteudps
-      - traefikservices
       - tlsoptions
       - tlsstores
-      - middlewares
       - serverstransports
+      - serverstransporttcps
     verbs:
       - get
       - list
@@ -57,14 +59,16 @@ rules:
   - apiGroups:
       - traefik.containo.us
     resources:
+      - middlewares
+      - middlewaretcps
       - ingressroutes
+      - traefikservices
       - ingressroutetcps
       - ingressrouteudps
-      - traefikservices
       - tlsoptions
       - tlsstores
-      - middlewares
       - serverstransports
+      - serverstransporttcps
     verbs:
       - get
       - list
