@@ -19,7 +19,7 @@ spec:
         - name: acr-secret
       containers:
       - name: my-go-app
-        image: trnimagestorage.azurecr.io/my-go-app:canary
+        image: trnimagestorage.azurecr.io/my-go-app:v0.3.0
         ports:
         - containerPort: 8080
 ---
