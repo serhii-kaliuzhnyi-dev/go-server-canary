@@ -54,6 +54,21 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - traefik.containo.us
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - traefikservices
+      - tlsoptions
+      - tlsstores
+      - middlewares
+      - serverstransports
+    verbs:
+      - get
+      - list
+      - watch
 ---
 apiVersion: v1
 kind: ServiceAccount
