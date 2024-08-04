@@ -97,6 +97,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: traefik-deployment
+  namespace: default 
   labels:
     app: traefik
 spec:
