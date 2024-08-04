@@ -144,8 +144,8 @@ spec:
       - name: my-go-app
         port: 80
         weight: 90
-      - name: my-go-app-canary
-        port: 80
+      - name: test-canary
+        port: web
         weight: 10
 ---
 apiVersion: traefik.io/v1alpha1
