@@ -112,6 +112,8 @@ spec:
           args:
             - --api.insecure
             - --providers.kubernetesingress
+            - --providers.kubernetesingress.ingressclass=traefik  # Ensure this matches your ingress class if used
+            - --providers.kubernetesingress.namespaces=default  
           ports:
             - name: web
               containerPort: 80
