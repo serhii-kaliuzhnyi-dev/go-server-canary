@@ -7,17 +7,17 @@ on:
       - main
 
 jobs:
-  check-title:
+  check-branch:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check Pull Request Title
+      - name: Check Branch Name
         uses: actions/github-script@v6
         with:
           script: |
-            const prTitle = context.payload.pull_request.title;
+            const branchName = context.payload.pull_request.head.ref;
             const releasePattern = /^release\/v\d+\.\d+\.\d+$/;
             const hotfixPattern = /^hotfix\/.*/;
-            if (!releasePattern.test(prTitle) && !hotfixPattern.test(prTitle)) {
-              core.setFailed(`Pull request title "${prTitle}" does not match the required naming convention (release/vX.X.X or hotfix/*)`);
+            if (!releasePattern.test(branchName) && !hotfixPattern.test(branchName)) {
+              core.setFailed(`Branch name "${branchName}" does not match the required naming convention (release/vX.X.X or hotfix/*)`);
             }
