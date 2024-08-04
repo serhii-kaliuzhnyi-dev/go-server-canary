@@ -16,7 +16,7 @@ type Event struct {
 var events = []Event{
 	{
 		ID: 1,
-		Name: "test",
+		Name: "test from prod",
 		Description: "test description",
 		Location: "test location",
 		DateTime: time.Now(),
