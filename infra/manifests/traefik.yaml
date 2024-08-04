@@ -93,7 +93,6 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: traefik-deployment
-  namespace: default
   labels:
     app: traefik
 spec:
@@ -109,11 +108,10 @@ spec:
       serviceAccountName: traefik-account
       containers:
         - name: traefik
-          image: traefik:v2.4
+          image: traefik:v3.1
           args:
-            - --api.insecure=true
-            - --providers.kubernetescrd
-            - --entrypoints.web.address=:80
+            - --api.insecure
+            - --providers.kubernetesingress
           ports:
             - name: web
               containerPort: 80
