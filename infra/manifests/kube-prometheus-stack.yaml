@@ -42,7 +42,6 @@ spec:
           provider: 
             allowUiUpdates: true
             foldersFromFilesStructure: true
-          searchNamespace: monitoring
     alertmanager:
       alertmanagerSpec:
         storage:

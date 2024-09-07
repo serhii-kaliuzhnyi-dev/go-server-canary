@@ -5,7 +5,7 @@ metadata:
   name: staging-dashboard
   namespace: monitoring
   labels:
-    grafana_dashboard: 1
+    grafana_dashboard: "1"
 data:
   golden-metrics-dashboard.json: |
     {
