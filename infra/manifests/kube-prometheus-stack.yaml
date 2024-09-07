@@ -37,6 +37,11 @@ spec:
       sidecar:
         dashboards:
           enabled: true
+          label: grafana_dashboard
+          folder: /tmp/dashboards
+          provider: 
+            allowUiUpdates: true
+            foldersFromFilesStructure: true
           searchNamespace: monitoring
     alertmanager:
       alertmanagerSpec:
