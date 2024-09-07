@@ -34,6 +34,10 @@ spec:
         retention: 10d
     grafana:
       adminPassword: "just-for-test"
+      sidecar:
+        dashboards:
+          enabled: true
+          searchNamespace: monitoring
     alertmanager:
       alertmanagerSpec:
         storage:
