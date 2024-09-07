@@ -34,6 +34,15 @@ spec:
         retention: 10d
     grafana:
       adminPassword: "just-for-test"
+      sidecar:
+        dashboards:
+          enabled: true
+          label: grafana_dashboard
+          folder: /tmp/dashboards
+          provider: 
+            allowUiUpdates: true
+            foldersFromFilesStructure: true
+          searchNamespace: monitoring
     alertmanager:
       alertmanagerSpec:
         storage:
