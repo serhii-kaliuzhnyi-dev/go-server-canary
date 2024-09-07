@@ -38,7 +38,7 @@ data:
         "dashes": false,
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "${datasource}"
         },
         "fill": 1,
         "fillGradient": 0,
@@ -77,7 +77,7 @@ data:
         "targets": [
           {
             "datasource": {
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "${datasource}"
             },
             "editorMode": "code",
             "expr": "rate(traefik_service_request_duration_seconds_sum[5m]) / rate(traefik_service_request_duration_seconds_count[5m])",
@@ -124,7 +124,7 @@ data:
         "dashes": false,
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "${datasource}"
         },
         "fill": 1,
         "fillGradient": 0,
@@ -163,7 +163,7 @@ data:
         "targets": [
           {
             "datasource": {
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "${datasource}"
             },
             "disableTextWrap": false,
             "editorMode": "builder",
@@ -216,7 +216,7 @@ data:
         "dashes": false,
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "${datasource}"
         },
         "fill": 1,
         "fillGradient": 0,
@@ -255,7 +255,7 @@ data:
         "targets": [
           {
             "datasource": {
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "${datasource}"
             },
             "editorMode": "code",
             "expr": "sum(rate(traefik_service_requests_total{code=~'5..'}[1m]))",
@@ -302,7 +302,7 @@ data:
         "dashes": false,
         "datasource": {
           "type": "prometheus",
-          "uid": "PBFA97CFB590B2093"
+          "uid": "${datasource}"
         },
         "fill": 1,
         "fillGradient": 0,
@@ -341,7 +341,7 @@ data:
         "targets": [
           {
             "datasource": {
-              "uid": "${DS_PROMETHEUS}"
+              "uid": "${datasource}"
             },
             "editorMode": "code",
             "expr": "rate(process_cpu_seconds_total{service='entry'}[5m])",
