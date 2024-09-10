@@ -157,10 +157,10 @@ spec:
     services:
       - name: my-go-app
         port: 80
-        weight: 90
-      - name: test-canary
-        port: web
-        weight: 10
+        weight: 100
+      # - name: test-canary
+        # port: web
+        # weight: 10
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
