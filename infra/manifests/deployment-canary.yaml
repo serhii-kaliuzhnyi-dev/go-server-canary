@@ -1,42 +1,42 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: test-canary
-  namespace: default
-  labels:
-    app: test
-    environment: canary
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: test
-      environment: canary
-  template:
-    metadata:
-      labels:
-        app: test
-        environment: canary
-    spec:
-      imagePullSecrets:
-        - name: acr-secret
-      containers:
-      - name: test
-        image: trnimagestorage.azurecr.io/my-go-app:v0.0.5
-        ports:
-        - containerPort: 8080
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: test-canary
-  namespace: default
-spec:
-  selector:
-    app: test
-    environment: canary
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8080
-    name: web
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: test-canary
+#   namespace: default
+#   labels:
+#     app: test
+#     environment: canary
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: test
+#       environment: canary
+#   template:
+#     metadata:
+#       labels:
+#         app: test
+#         environment: canary
+#     spec:
+#       imagePullSecrets:
+#         - name: acr-secret
+#       containers:
+#       - name: test
+#         image: trnimagestorage.azurecr.io/my-go-app:v0.0.5
+#         ports:
+#         - containerPort: 8080
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: test-canary
+#   namespace: default
+# spec:
+#   selector:
+#     app: test
+#     environment: canary
+#   ports:
+#   - protocol: TCP
+#     port: 80
+#     targetPort: 8080
+#     name: web
